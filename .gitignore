@@ -4,6 +4,8 @@
 # .tfstate files
 *.tfstate
 *.tfstate.*
+# vagrant cachedir
+.vagrantfile
 
 # Crash log files
 crash.log
