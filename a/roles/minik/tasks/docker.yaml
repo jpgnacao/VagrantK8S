@@ -1,0 +1,74 @@
+---
+#https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-22-04
+  - name: Start Tick Docker
+    shell: |
+      echo "Start Install Docker $(date) " > /tmp/docker.log
+    become: true
+  - name: Install minik base apps
+    ansible.builtin.apt:
+      name: "{{ item }}"
+      state: latest
+    with_items: "{{ apps }}"
+    vars:
+      apps:
+        - sysvbanner 
+        - apt-transport-https
+        - ca-certificates
+        - curl
+        - software-properties-common
+        - gpg
+    become: true
+  - name: Download docker keyring
+    ansible.builtin.get_url:
+      url: https://download.docker.com/linux/ubuntu/gpg
+      dest: /tmp/gpg
+      mode: '0666'
+  - name: dearmor docker keyring
+    ansible.builtin.shell: |
+      sudo gpg --dearmor -o /tmp/docker-archive-keyring.gpg </tmp/gpg;
+      sudo mv /tmp/docker-archive-keyring.gpg /usr/share/keyrings/docker-archive-keyring.gpg;
+    become: true
+  - name: install docker keyring
+    ansible.builtin.apt_key:
+      url: https://download.docker.com/linux/ubuntu/gpg
+      state: present
+    become: true
+  - name: Copy file with docker repo
+    ansible.builtin.copy:
+       src:  docker.list
+       dest: /etc/apt/sources.list.d/docker.list
+       owner: root
+       group: root
+       mode: '0644'
+    become: true
+#  - name: update apt cache 1
+#    ansible.builtin.shell: 
+#      sudo apt update;
+#    become: true
+#fatal: [vk8s]: FAILED! => {"changed": false, "msg": "E:Malformed entry 1 in list file /etc/apt/sources.list.d/download_docker_com_linux_ubuntu.list ([option] not assignment), E:The list of sources could not be read."}
+  - name: add docker repo
+    ansible.builtin.apt_repository:
+      repo: "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu jammy stable"
+      state: present
+    become: true
+  - name: update apt cache 1
+    ansible.builtin.shell: 
+      sudo apt update;
+    become: true
+#    tags: update
+  - name: Update and upgrade apt cache 2
+    apt:
+      upgrade: 'full'
+      update_cache: yes
+      autoclean: yes
+      cache_valid_time: 86400 #One day
+    run_once: true
+    become: true
+#    tags: update
+  - name: Install docker community edition
+    ansible.builtin.apt:
+      name: "docker-ce"
+      state: latest
+    become: true
+...
+

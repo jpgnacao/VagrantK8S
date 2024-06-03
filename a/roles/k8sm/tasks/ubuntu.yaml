@@ -1,0 +1,20 @@
+---
+  - name: Start Tick
+    shell: |
+      echo "Start Install Ubuntu $(date) " > /tmp/ubuntu.log
+    become: true
+
+  - name: Install k8s base apps
+    ansible.builtin.apt:
+      name: "{{ item }}"
+      state: latest
+    with_items: "{{ apps }}"
+    vars:
+      apps:
+        - apt-transport-https
+        - ca-certificates
+        - curl
+        - gpg
+    become: true
+
+...

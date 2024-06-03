@@ -1,0 +1,97 @@
+---
+# marca o inicio da instalação do docker
+  - name: Start Tick
+    shell: |
+      echo "Start Install users $(date) " > /tmp/users.log
+    become: true
+
+#-|-|-|----|------------------------------------------------
+  - name: System details
+    debug: msg="{{ item }}"
+    with_items: 
+      - "{{ ansible_distribution }}"
+      - "{{ ansible_distribution_version }}"
+      - "{{ ansible_distribution_major_version }}"
+#-|-|-|----|------------------------------------------------
+  - name: Select OS Ubuntu
+    ansible.builtin.include_tasks:
+      file: ubuntu.yaml
+    when:
+      - ansible_facts['distribution'] == "Ubuntu"
+#      - ansible_facts['distribution_major_version'] == "8"
+#-|-|-|----|------------------------------------------------
+  - name: Select OS Centos
+    ansible.builtin.include_tasks:
+      file: centos.yaml
+    when:
+      - ansible_facts['distribution'] == "CentOS"
+#      - ansible_facts['distribution_major_version'] == "8"
+#-|-|-|----|------------------------------------------------
+  - name: Select OS BSD
+    ansible.builtin.include_tasks:
+      file: bsd.yaml
+    when:
+      - ansible_facts['distribution'] == "NetBSD"
+#      - ansible_facts['distribution_major_version'] == "9"
+#-|-|-|----|------------------------------------------------
+#  - name: centos8 fix
+#    ansible.builtin.shell:
+#      cmd: |
+#        sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
+#    become: true
+#    when:
+#      - ansible_facts['distribution'] == "CentOS"
+#      - ansible_facts['distribution_major_version'] == "8"
+##    when:  "{{ ansible_distribution }}" == "CentOS" and "{{ ansible_distribution_major_version }}" == '8'
+##
+##-|-|-|----|------------------------------------------------
+#  - name: print a message
+#    ansible.builtin.debug:
+##    debug: msg="{{ item }}"
+#      msg: "Conditional True"
+##    when:  "{{ ansible_distribution }}" == "CentOS" and "{{ ansible_distribution_major_version }}" == "8"
+#    when:
+#      - ansible_facts['distribution'] == "CentOS"
+#      - ansible_facts['distribution_major_version'] == "8"
+#
+#
+##-|-|-|----|------------------------------------------------
+#  - name: install yum-utils
+#    ansible.builtin.yum:
+#      name: "yum-utils"
+#      state: latest
+#    become: true
+##-|-|-|----|------------------------------------------------
+#  - name: install docker-ce-repo
+#    ansible.builtin.shell: |
+#      yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+#    become: true
+##-|-|-|----|------------------------------------------------
+#  - name: install docker packages
+#    ansible.builtin.yum:
+#      name:
+#         - docker-ce
+#         - docker-ce-cli
+#         - containerd.io
+#         - docker-buildx-plugin
+#         - docker-compose-plugin
+#      state: latest
+#    become: true
+##-|-|-|----|------------------------------------------------
+#  - name: Start and enable docker
+#    ansible.builtin.systemd:
+#      name: docker
+#      state: started
+#      enabled: true
+#    become: true
+##-|-|-|----|------------------------------------------------
+#  - name: End Tick
+#    shell: |
+#      echo "End Install Docker $(date) " >> /tmp/docker.log
+#    become: true
+##-|-|-|----|------------------------------------------------
+##  - name: Basic test roles for docker
+##    ansible.builtin.import_tasks: test.yaml
+#
+#
+...

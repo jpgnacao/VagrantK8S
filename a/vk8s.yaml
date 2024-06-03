@@ -8,8 +8,11 @@
         comment: regular user
 #        uid: 1010
         group: adm
-        password: $y$j9T$DAWBd4qD2yh8YOsJ5gIEM0$E6Nn0k3JL01dLLjg2ETsM4qY9FzSYawpWHc4yN29Gs5
+#        password: $y$j9T$DAWBd4qD2yh8YOsJ5gIEM0$E6Nn0k3JL01dLLjg2ETsM4qY9FzSYawpWHc4yN29Gs5
+        password: "{{ '12345678' | password_hash('sha512') }}"
         shell: /usr/bin/bash
+        state: present
+        createhome: yes
         generate_ssh_key: yes
         ssh_key_bits: 2048
         ssh_key_file: .ssh/id_rsa
@@ -34,5 +37,8 @@
         group: adm
         mode: '440'
       become: true
+  roles:
+    - role: roles/sysuser
+
 
 ...

@@ -1,0 +1,25 @@
+---
+  - name: Start Tick Minikube
+    shell: |
+      echo "Start Install Docker $(date) " > /tmp/docker.log
+    become: true
+ 
+  - name: Mk Download Minikube  binary
+    ansible.builtin.get_url:
+      url: 'https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64'
+      dest: /usr/local/bin/minikube
+      mode: '0755'
+      owner: root
+      group: root
+    become: true
+#    when: k8sdriver == "docker"
+#curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
+  - name: Mk Install Minikube driver k8sdriver
+    ansible.builtin.shell: |
+      sudo -u minik bash -c id > /tmp/premini.log;
+      sudo -u minik minikube start --nodes 3 --driver="{{ k8sdriver }}";
+#    command_warnings: False
+    args:
+      warn: false
+#
+...

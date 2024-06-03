@@ -1,0 +1,15 @@
+#!/bin/bash
+f1(){
+banner X1
+sudo swapoff -a
+sudo sed -i.bak -r 's/(.*swap.*)/#\1/' /etc/fstab
+sudo modprobe overlay
+sudo modprobe br_netfilter
+sudo tee /etc/sysctl.d/kubernetes.conf<<EOF
+net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-iptables = 1
+net.ipv4.ip_forward = 1
+EOF
+sudo sysctl --system
+}
+f1 > /tmp/x1.log 2> /tmp/v1.err

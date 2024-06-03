@@ -1,0 +1,7 @@
+#mq--X--X--X--X--X--X--X--X--X--X--X--X--X--X--
+all:
+  hosts:
+    vk8s:
+      ansible_user: ansible
+      hosts: vk8s
+

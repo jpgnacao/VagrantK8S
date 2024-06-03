@@ -1,0 +1,116 @@
+---
+#https://www.linuxbuzz.com/install-minikube-on-ubuntu/
+  - name: Start Tick Minikube
+    shell: |
+      echo "Start Install Minikube $(date) " > /tmp/minikube.log
+    become: true
+  - name: teste de Vars
+    debug:
+      msg: "Var:  {{ k8sdriver }}!"
+
+
+#    register: extra_vars
+#  - name: print all variables
+#    debug:
+#      var=vars
+#  - name: Install minik base apps
+#    ansible.builtin.apt:
+#      name: "{{ item }}"
+#      state: latest
+#    with_items: "{{ apps }}"
+#    vars:
+#      apps:
+#        - sysvbanner 
+#        - apt-transport-https
+#        - ca-certificates
+#        - curl
+#        - software-properties-common
+#        - gpg
+#    become: true
+#  - name: Download foo.conf
+#    ansible.builtin.shell:
+#      curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg ;
+#    become: true
+#  - name: Copy file with docker repo
+#    ansible.builtin.copy:
+#       src:  docker.list
+#       dest: /etc/apt/sources.list.d/docker.list
+#       owner: root
+#       group: root
+#       mode: '0644'
+#    become: true
+#  - name: Download foo.conf
+#    ansible.builtin.shell: 
+#      sudo apt update;
+#    become: true
+#  - name: Update and upgrade apt cache
+#    apt:
+#      upgrade: 'full'
+#      update_cache: yes
+#      autoclean: yes
+#      cache_valid_time: 86400 #One day
+#    run_once: true
+#    become: true
+#  - name: Install docker community edition
+#    ansible.builtin.apt:
+#      name: "docker-ce"
+#      state: latest
+#    become: true
+#
+  - name: Include docker task in play
+    ansible.builtin.include_tasks:
+       file: docker.yaml
+    when: k8sdriver == "docker"
+    tags: t01
+  - name: Include minikube task in play
+    ansible.builtin.include_tasks:
+       file: minikube.yaml
+    tags: t01
+  - name: Include kubectl task in play
+    ansible.builtin.include_tasks:
+       file: kubectl.yaml
+#    when: k8sdriver == "docker"
+    tags: t02
+#   become: true
+#  - name: Download Minikube  binary
+#    ansible.builtin.get_url:
+#      url: 'https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64'
+#      dest: /usr/local/bin/minikube
+#      mode: '0755'
+#      owner: root
+#      group: root #    become: true
+#    when: k8sdriver == "docker"
+#curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
+#  - name: Install Minikube driver docker
+#    ansible.builtin.shell:
+#      sudo -u minik bash -c id > /tmp/premini.log; minikube start --nodes 3 --driver="{{ k8sdriver }}";
+#    command_warnings: False
+#    args:
+#      warn: false
+#
+#  - name: Register latest Kubectl version
+#    ansible.builtin.shell:
+#      wget -O -  -o /dev/null cdn.dl.k8s.io/release/stable.txt
+#    register: kubectlver
+#    become: true
+##    warn: false
+##    command_warnings: False
+##    become: true
+#  - name: debug Kubectl  binary
+#    ansible.builtin.debug:
+#      msg: " -O -  -o /dev/null cdn.dl.k8s.io/release/stable.txt"
+##      msg: "https://storage.googleapis.com/kubernetes-release/release/{{ kubectlver.stdout }}/bin/linux/amd64/kubectl"
+#  - name: Download/Install Kubectl  binary
+#    ansible.builtin.get_url:
+#      url: "https://storage.googleapis.com/kubernetes-release/release/{{ kubectlver.stdout }}/bin/linux/amd64/kubectl"
+#      dest: /usr/local/bin/kubectl
+#      mode: '0755'
+#      owner: root
+#      group: root
+#    become: true
+#
+#
+# 
+# 
+#
+...

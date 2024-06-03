@@ -1,0 +1,28 @@
+---
+  - name: KC Start Tick Kubectl
+    shell: |
+      echo "Start Install Docker $(date) " > /tmp/docker.log
+    become: true
+  - name: Register latest Kubectl version
+    ansible.builtin.shell:
+      wget -O -  -o /dev/null cdn.dl.k8s.io/release/stable.txt
+    register: kubectlver
+    become: true
+#    warn: false
+#    command_warnings: False
+#    become: true
+  - name: KC debug Kubectl  binary
+    ansible.builtin.debug:
+      msg: " -O -  -o /dev/null cdn.dl.k8s.io/release/stable.txt"
+#      msg: "https://storage.googleapis.com/kubernetes-release/release/{{ kubectlver.stdout }}/bin/linux/amd64/kubectl"
+  - name: KC Download/Install Kubectl  binary
+    ansible.builtin.get_url:
+      url: "https://storage.googleapis.com/kubernetes-release/release/{{ kubectlver.stdout }}/bin/linux/amd64/kubectl"
+      dest: /usr/local/bin/kubectl
+      mode: '0755'
+      owner: root
+      group: root
+    become: true
+#
+...
+

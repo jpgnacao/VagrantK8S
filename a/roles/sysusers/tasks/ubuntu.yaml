@@ -1,0 +1,64 @@
+---
+  - name: myvars
+    ansible.builtin.include_vars:
+      file: main.yaml
+  - name: Start Tick Ubuntu OS
+    shell: |
+      echo "Start Install Ubuntu $(date) " > /tmp/ubuntu.log
+    become: true
+  - name: Update and upgrade apt packages
+    apt:
+      upgrade: 'full'
+      update_cache: yes
+      autoclean: yes
+      cache_valid_time: 86400 #One day
+    run_once: true
+    become: true
+  - name: Ensure group "docker" exists
+    ansible.builtin.group:
+      name: docker
+      state: present
+    become: true
+  - name: Ensure group "wheel" exists
+    ansible.builtin.group:
+      name: wheel
+      state: present
+    become: true
+  - name: allow sudo for wheel group
+    ansible.builtin.copy:
+      src: files/users.sudo
+      dest: /etc/sudoers.d/users
+      owner: root
+      group: wheel
+      mode: '440'
+    become: true
+ 
+  - name: cria os usuários interativos do sistema
+    ansible.builtin.user:
+      name: "{{ item.uname }}"
+      comment: "{{ item.ucomm }}"
+      groups: wheel,docker,adm
+      append: yes
+      shell: /bin/bash
+      create_home: true
+      generate_ssh_key: true
+      ssh_key_bits: 2048
+      ssh_key_file: .ssh/id_rsa
+      password: "{{ item.upass | password_hash('sha512') }}"
+    with_items: "{{ allusers }}"
+    become: true
+# autoriza meu usuário no ssh
+  - name: allow user key in the system
+    ansible.builtin.copy:
+      src: files/authorized_keys
+      dest: "/home/{{ item.uname }}/.ssh/authorized_keys"
+      owner: "{{ item.uname }}"
+      group: "{{ item.uname }}"
+      mode: '644'
+    become: true
+    with_items: "{{ allusers }}"
+
+
+
+...
+

@@ -1,0 +1,14 @@
+---
+- hosts: all
+
+  roles:
+#    - role: ../../roles/test
+      vars:
+        sysusers:
+          - nacao
+          - jnacao
+          - user1
+          - user2
+#empty role:
+    - role: ./roles/template
+#

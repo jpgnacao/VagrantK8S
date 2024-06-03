@@ -1,0 +1,23 @@
+---
+# Vars
+  localusers:
+    - nacao
+    - jnacao
+  sysusers:
+    - ansible
+    - user1
+# Descobrir depois como funcionaria!
+# XXX
+#  list_of_all_users:
+#    -"{{ localusers }}"
+#    -"{{ sysusers }}"
+  allusers:
+    - {uname: "nacao",upass: "12345678", ucomm: "Joao Paulo G Nacao"}
+    - {uname: "jnacao",upass: "12345678", ucomm: "Joao Paulo G Nacao"}
+    - {uname: "ansible",upass: "12345678", ucomm: "ansible user"}
+    - {uname: "minik",upass: "12345678", ucomm: "kube user"}
+#    - jnacao
+#    - ansible
+#    - user1
+#    - mini1
+...

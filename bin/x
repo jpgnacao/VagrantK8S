@@ -1,0 +1,15 @@
+#!/bin/bash
+f1() {
+sudo apt install sysvbanner
+banner X
+export VER=1.29
+
+curl -fsSL https://pkgs.k8s.io/core:/stable:/v${VER}/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v${VER}/deb/ /" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+
+sudo apt update
+sudo apt install wget curl vim git kubelet kubeadm kubectl -y
+sudo apt-mark hold kubelet kubeadm kubectl
+}
+f1 > /tmp/x.log 2> /tmp/x.err
+

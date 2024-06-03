@@ -1,0 +1,8 @@
+---
+  - name: Start Tick
+    shell: |
+      echo "Start Install Ubuntu $(date) " > /tmp/ubuntu.log
+    become: true
+
+...
+
