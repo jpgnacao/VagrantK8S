@@ -32,14 +32,22 @@ https://computingforgeeks.com/install-kubernetes-cluster-ubuntu-jammy/
  
   executa o yaml de teste de ansible
 
-prov:
+- prov:
+
   restaura o servidor
+
   provisiona o servidor com o vagrant
-halt:
+
+- halt:
+
   Salva o servidor
+
   interrompe sua execução
-run:
+
+- run:
+
   Cria o servidor
+
   ou se ja existir inicia ele.
 
 
