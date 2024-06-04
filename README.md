@@ -3,7 +3,7 @@ meus testes de minik8s com vagrant
 baseados em:
 https://computingforgeeks.com/install-kubernetes-cluster-ubuntu-jammy/
 
--- targets para o Makefile
+## targets para o Makefile
 - all: cicle
 
  target default o mesmo que cicle
